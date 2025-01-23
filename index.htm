@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Pagination</title>
+  <style>
+    .pagination { display: flex; gap: 10px; justify-content: center; margin-top: 20px; margin-bottom: 30px; }
+    .page-item { padding: 10px 15px; border: 1px solid #ddd; cursor: pointer; }
+    .active { background-color: #007bff; color: white; border-color: #007bff; }
+  </style>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <div class="pagination" id="pagination"></div>
+  <div class="container"></div>
+
+  <div class="logo">
+  <img src="pokemon.png" alt="" >
+  </div>
+
+  <script>
+    const totalPages = 45;
+    let currentPage = 1;
+
+    function renderPagination() {
+      const pagination = document.getElementById('pagination');
+      pagination.innerHTML = ''; // Clear previous content
+
+      // "Prev" button
+      if (currentPage > 1) {
+        const prev = document.createElement('span');
+        prev.textContent = 'Prev';
+        prev.className = 'page-item';
+        prev.onclick = () => {
+          currentPage--;
+          renderPagination();
+          getPokemonSprites(currentPage);
+        };
+        pagination.appendChild(prev);
+      }
+
+      // Page numbers
+      const range = 3;
+      const start = Math.max(1, currentPage - Math.floor(range / 2));
+      const end = Math.min(totalPages, start + range - 1);
+
+      for (let i = start; i <= end; i++) {
+        const page = document.createElement('span');
+        page.textContent = i;
+        page.className = `page-item ${i === currentPage ? 'active' : ''}`;
+        page.onclick = () => {
+          currentPage = i;
+          renderPagination();
+          getPokemonSprites(currentPage);
+
+        };
+        pagination.appendChild(page);
+      }
+
+      // Always show the last page
+      if (end < totalPages) {
+        const last = document.createElement('span');
+        last.textContent = totalPages;
+        last.className = 'page-item';
+        last.onclick = () => {
+          currentPage = totalPages;
+          renderPagination();
+          getPokemonSprites(currentPage);
+        };
+        pagination.appendChild(last);
+      }
+
+      // "Next" button
+      if (currentPage < totalPages) {
+        const next = document.createElement('span');
+        next.textContent = 'Next';
+        next.className = 'page-item';
+        next.onclick = () => {
+          currentPage++;
+          renderPagination();
+          getPokemonSprites(currentPage);
+        };
+        pagination.appendChild(next);
+      }
+    }
+
+    renderPagination();
+  </script>
+
+<script src="index.js"></script>
+</body>
+</html>
